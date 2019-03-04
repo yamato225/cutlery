@@ -6,6 +6,8 @@ BUNBUN Dish and Cutlery enable you to use Raspberry Pi W and Raspbian with your 
 
 ## Architecture
 
+BUNBUN Dish is a product which has LEDs, switches, IR sensors and connecotr for Raspberry Pi.
+
 Cutlery has 2 components.
 
 1. Mom:  
