@@ -11,7 +11,6 @@ sudo systemctl ifconfig wlan0 up
 sudo systemctl start wpa_supplicant
 sleep 2
 sudo systemctl start dhcpcd
-sleep 2
 
 
 dd=10
