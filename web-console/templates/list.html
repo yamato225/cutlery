@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="card">
+        <h2>設定モード</h2>
+            Dish001を設定中です。
+        </div>
+        <h3>アプリ設定</h3>
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action">赤外線 送信</button>
+            <button class="list-group-item list-group-item-action">赤外線 受信</button>
+        </div>
+        <h3>Dish設定</h3>
+        <div class="list-group">
+            <a href="{{ url_for('wifi_config') }}" class="list-group-item list-group-item-action"><i class="fas fa-wifi"></i>Wifi設定</a>
+        </div>
+{% endblock %}

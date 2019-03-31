@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h2>Wifi設定</h2>
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('wifi_config') }}" method=post>
+      <div class="form-group">
+        <label for="input_ssid">SSID</label>
+        <input type="text" class="form-control" id="input_ssid" placeholder="接続先wifiのSSIDを入力(例:AP001)">
+      </div>
+      <div class="form-group">
+        <label for="input_password">パスワード</label>
+        <input type="text" class="form-control" id="input_password" placeholder="接続先wifiのSSIDを入力">
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="defaultCheck1" checked>
+          <label class="form-check-label" for="defaultCheck1">
+            パスワードを表示
+          </label>
+        </div>
+      <button class="btn btn-primary btn-block" type="submit">登録</button>
+      <a class="btn btn-dark btn-block" href="{{ url_for('config_list') }}">戻る</a>
+  </form>
+  <script type="text/javascript">
+  </script>
+{% endblock %}
