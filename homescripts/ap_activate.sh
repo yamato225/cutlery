@@ -18,6 +18,7 @@ sudo ifconfig wlan0 down
 sudo ifconfig wlan0 up
 sudo nohup hostapd /etc/hostapd/hostapd.conf &
 sleep 3
+sudo systemctl daemon-reload
 sudo systemctl restart dhcpcd
 sudo systemctl restart dnsmasq
 

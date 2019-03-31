@@ -20,10 +20,11 @@ sudo apt install -y lirc dnsmasq hostapd python3-rpi.gpio
 # resize fs
 ## activate resize2fs script(expanding filesystem size to use all of SD card space)
 echo "----------------------"
-echo "2. resize2fs script"
+echo "2. set filesystem to expand at next boot"
 echo "----------------------"
 restore_path="/etc/rc3.d/S01resize2fs_once"
 sudo ln -s "../init.d/resize2fs_once" $restore_path
+sed '1s|$| init=/usr/lib/raspi-config/init_resize.sh|' /boot/cmdline.txt
 
 # add lirc config to /boot/config.txt
 echo "----------------------"
@@ -88,7 +89,6 @@ echo "----------------------"
 echo "11. change resolution "
 echo "----------------------"
 cat << EOL | sudo tee -a /boot/config.txt > /dev/null
-
 hdmi_group=1
 hdmi_mode=1
 EOL

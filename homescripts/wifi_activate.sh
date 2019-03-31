@@ -10,6 +10,7 @@ sudo systemctl ifconfig wlan0 down
 sudo systemctl ifconfig wlan0 up
 sudo systemctl start wpa_supplicant
 sleep 2
+sudo systemctl daemon-reload
 sudo systemctl start dhcpcd
 
 
