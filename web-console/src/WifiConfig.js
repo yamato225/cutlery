@@ -1,4 +1,4 @@
-import React, { Component,useState } from 'react'
+import React, { useState } from 'react'
 
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -108,19 +108,20 @@ import mqtt from 'mqtt';
 
     refresh_ssid_list = (topic,message) => {
       //console.log(message.toString())
+      console.log("refreshing");
       var obj=JSON.parse(message.toString());
-      console.log(obj);
-      this.setState({ssid_list:this.state.ssid_list.concat(obj)});
+      //this.setState({ssid_list:this.state.ssid_list.concat(obj)});
+      this.setState({ssid_list:this.state.ssid_list = obj});
       this.setState({ssid_list:obj});
     }
 
-    componentDidMount(){
+    componentWillMount(){
       //connect to MQTT
       //alert(localtion.host);
       var host_name=window.location.host.split(':')[0];
       var url="ws://"+host_name+":9090";
-      console.log(url);
-      url="ws://dishdev03.local:9090";
+      //console.log(url);
+      //url="ws://dishdev03.local:9090";
       this.mqtt_client = mqtt.connect(url);
 
       this.mqtt_client.on('connect',function(){
@@ -129,6 +130,12 @@ import mqtt from 'mqtt';
 
       this.mqtt_client.subscribe('wifi_config/scan_results',{qos:0});
       this.mqtt_client.publish('process_waker/wake','wifi_config',{qos:2});
+      this.mqtt_client.on("message",this.refresh_ssid_list);
+    }
+
+    componentWillUnmount(){
+      console.log("disconnecting...");
+      this.mqtt_client.end();
     }
 
     backToHome = () => {

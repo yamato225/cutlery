@@ -4,6 +4,13 @@ import subprocess
 import threading
 import time
 
+import signal
+import sys
+
+# TODO: ログ機能つける
+
+app_path="/home/pi/cutlery/apps/"
+
 process_list={
   "wifi_setter": {"filename":"wifi_config/setter.py","pid":0},
   "wifi_scanner": {"filename":"wifi_config/wifi_scanner.py","pid":0},
@@ -70,7 +77,8 @@ def on_disconnect(client, userdata, flag, rc):
     print("Unexpected disconnection.")
 
 def wake_process(process_name):
-  filename=process_list[process_name]['filename']
+  filename=app_path + process_list[process_name]['filename']
+  print("fn="+filename)
   pobj=subprocess.Popen(['python3',filename])
   #process_list[process_name]['pid']=pobj.pid
   process_list[process_name]['pobj']=pobj
@@ -100,5 +108,23 @@ client.on_disconnect = on_disconnect
 client.on_message = on_message
 
 client.connect("localhost", 1883, 60)
+
+def sigterm_handler(signal_number,stack_frame):
+  global client
+  print("Terminating children")
+  client.disconnect()
+  for k in process_list.keys():
+    if "pobj" in process_list[k].keys():
+      pobj=process_list[k]["pobj"]
+      if not pobj is None:
+        pid=pobj.pid
+        if pobj.poll() is None:
+          print("terminate: "+str(pid))
+          pobj.terminate()
+          pobj.wait(10)
+  print("Terminated")
+  sys.exit(0)
+
+signal.signal(signal.SIGTERM, sigterm_handler)
 
 client.loop_forever()

@@ -33,9 +33,10 @@ class ScanThread(threading.Thread):
       for cell in cells:
           qs=cell.quality.split('/')
           strength=int(int(qs[0])*5/int(qs[1]))
+          print(cell.ssid)
           wifi_list.append({"id":id,"name":cell.ssid,"strength":strength})
           id+=1
-      print("sending...")
+      #print("sending...")
       print(SCAN_RESULT_TOPIC_NAME)
       client.publish(SCAN_RESULT_TOPIC_NAME,json.dumps(wifi_list))
 

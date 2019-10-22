@@ -1,0 +1,11 @@
+[Unit]
+Description=Cutlery
+After=network.target
+
+[Service]
+ExecStart=/home/pi/cutlery/start_cutlery.sh
+KillMode=process
+Type=simple
+
+[Install]
+WantedBy=multi-user.target

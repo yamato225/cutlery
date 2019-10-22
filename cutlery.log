@@ -1,0 +1,68 @@
+Tue 22 Oct 17:15:17 JST 2019
+=======================================
+Connected with result code 0
+Terminating children
+Terminated
+Tue 22 Oct 17:15:55 JST 2019
+=======================================
+sigterm
+Connected with result code 0
+terminated: setter
+Connected with result code 0
+start!
+flag=False
+flag=False
+scanning
+POMIQ241
+POMIQ242
+rs500m-501f4f-1
+rs500m-501f4f-2
+rs500m-60fb3f-1
+rs500m-60fb3f-2
+ERIMAKI1106
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+vhiuremhj
+wifi_config/scan_results
+flag=False
+scanning
+POMIQ241
+POMIQ242
+rs500m-501f4f-1
+rs500m-501f4f-2
+rs500m-60fb3f-1
+rs500m-60fb3f-2
+ERIMAKI1106
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+vhiuremhj
+wifi_config/scan_results
+flag=False
+scanning
+POMIQ241
+POMIQ242
+rs500m-501f4f-1
+rs500m-501f4f-2
+rs500m-60fb3f-1
+rs500m-60fb3f-2
+ERIMAKI1106
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00
+vhiuremhj
+wifi_config/scan_results
+wifi_config:closing connection
+Connected with result code 0
+Received message 'b'wifi_config'' on topic 'process_waker/wake' with QoS 2
+fn=/home/pi/cutlery/apps/wifi_config/wake.py
+pid=1774
+Received message 'b'wifi_scanner'' on topic 'process_waker/wake' with QoS 0
+fn=/home/pi/cutlery/apps/wifi_config/wifi_scanner.py
+pid=1777
+Received message 'b'wifi_setter'' on topic 'process_waker/wake' with QoS 0
+fn=/home/pi/cutlery/apps/wifi_config/setter.py
+pid=1778
+pid=1774: dead
+Terminating children
+Terminated
+Tue 22 Oct 17:16:19 JST 2019
+=======================================
+Connected with result code 0
+Terminating children
+Terminated

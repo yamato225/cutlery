@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -49,8 +49,8 @@ import { withRouter } from 'react-router';
               flexGrow: 1,
             },
           }));
-        var cards = [{id:"wifi" ,name: "wifi設定",url: "./wifi",description:"接続先wifiを設定します。"}, 
-            {id:"ir_receiver" ,name: "リモコンコピー",url: "./ir_receiver",description:"リモコンの信号を保存します"}];
+        var cards = [{id:"wifi" ,name: "wifi設定",url: "./wifi",description:"接続先wifiを設定します。"}];//, 
+            //{id:"ir_receiver" ,name: "リモコンコピー",url: "./ir_receiver",description:"リモコンの信号を保存します"}];
             //,{id:"dummy",name: "dummy",url:"./dummy",description:"nurupo"}];
 
         return (

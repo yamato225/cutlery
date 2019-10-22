@@ -24,7 +24,7 @@ def on_message(client, userdata, msg):
   conf_file.write(conf_text)
   print(conf_text)
   #TODO: systemd経由でなく、rpi-wifi-monitorにmosquitto経由で再起動させる。
-  subprocess.Popen(["systemctl","restart","rpi-wifi-monitor"])
+  ##subprocess.Popen(["systemctl","restart","rpi-wifi-monitor"])
   # inform other processes processes to close
   client.publish("wifi_config/close","[]")
   client.disconnect()
