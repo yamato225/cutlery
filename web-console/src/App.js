@@ -1,6 +1,8 @@
 import React from 'react';
 import AppList from './AppList';
 import WifiConfig from './WifiConfig';
+import IRStudy from './IRStudy';
+import IRSend from './IRSend';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 //Appbar components
@@ -29,6 +31,8 @@ export default class App extends React.Component{
           <main>
           <Route exact path='/' component={AppList} />
           <Route exact path='/wifi' component={WifiConfig} />
+          <Route exact path='/irstudy' component={IRStudy} />
+          <Route exact path='/irsend' component={IRSend} />
           </main>
         </BrowserRouter>
       );

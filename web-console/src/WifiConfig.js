@@ -4,6 +4,8 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
+import {RadioGroup,FormControl,FormControlLabel,FormLabel,Radio} from '@material-ui/core';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,7 +14,7 @@ import { withRouter } from 'react-router';
 import { Dialog,DialogTitle,DialogContent,DialogActions,DialogContentText } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 //import signalWifi4Bar from '@material-ui/icons/signalWifi4Bar';
-import {SignalWifi4Bar,SignalWifi3Bar,SignalWifi2Bar,SignalWifi1Bar,SignalWifi0Bar} from '@material-ui/icons';
+import {SignalWifi4Bar,SignalWifi3Bar,SignalWifi2Bar,SignalWifi1Bar,SignalWifi0Bar, CheckCircle} from '@material-ui/icons';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import mqtt from 'mqtt';
@@ -90,7 +92,61 @@ import mqtt from 'mqtt';
     );
   }
 
+  function getUrl(){
+    var host_name=window.location.host.split(':')[0];
+    var url="ws://"+host_name+":9090";
+    //console.log(url);
+    //url="ws://dishdev02.local:9090";
+    url="ws://192.168.3.147:9090";
+    //this.mqtt_client = mqtt.connect(url);
+    return url;
+  }
 
+  class WirelessSwitchRadioButtons extends React.Component{
+    constructor(props){
+      super(props);
+      this.mqtt_client=null;
+      this.state = {
+        switch_value: "wifi"
+      };
+    }
+
+    status_received=(topic,message) => {
+
+    }
+
+    componentDidMount(){
+      /*var url=getUrl();
+      this.mqtt_client= mqtt.connect(url);
+
+      this.mqtt_client.on('connect',function(){
+        console.log("connected.");
+      })
+
+      /*this.mqtt_client.subscribe('wireless_switch/get_status',{qos:2});
+      this.mqtt_client.publish('wireless_switch/request',{qos:2});
+      this.mqtt_client.on('message',this.status_received);*/
+    }
+
+    changeSwitchValue = (value) => {
+      this.setState({switch_value:value});
+    }
+
+    render(){
+      return (
+        <RadioGroup name="network-mode-selector" value={this.state.switch_value}>
+          <ListItem button onClick={() => this.changeSwitchValue("ap")}>
+            <FormControlLabel value="ap" control={<Radio />}/>
+            <ListItemText primary="APモード" secondary='"dish0010"として接続出来ます' />
+          </ListItem>
+          <ListItem button onClick={() => this.changeSwitchValue("wifi")}>
+            <FormControlLabel value="wifi" control={<Radio />}/>
+            <ListItemText primary="Wifiモード" secondary="接続中：POMIQ24"/>
+          </ListItem>
+        </RadioGroup>
+      );
+    }
+  }
 
   class WifiConfig extends React.Component {
     constructor(props){
@@ -111,22 +167,26 @@ import mqtt from 'mqtt';
       console.log("refreshing");
       var obj=JSON.parse(message.toString());
       //this.setState({ssid_list:this.state.ssid_list.concat(obj)});
-      this.setState({ssid_list:this.state.ssid_list = obj});
+      //this.setState({ssid_list:this.state.ssid_list = obj});
       this.setState({ssid_list:obj});
     }
 
     componentWillMount(){
       //connect to MQTT
       //alert(localtion.host);
-      var host_name=window.location.host.split(':')[0];
-      var url="ws://"+host_name+":9090";
+      //var host_name=window.location.host.split(':')[0];
+      //var url="ws://"+host_name+":9090";
+      var url=getUrl();
       //console.log(url);
-      //url="ws://dishdev03.local:9090";
+      url="ws://dishdev02.local:9090";
       this.mqtt_client = mqtt.connect(url);
+      //#this.wireless_switch=mqtt.connect(url);
 
       this.mqtt_client.on('connect',function(){
         console.log("connected.");
       })
+
+      //this.mqtt_client.subscribe('wireless_switch/get_status',{qos:2});
 
       this.mqtt_client.subscribe('wifi_config/scan_results',{qos:0});
       this.mqtt_client.publish('process_waker/wake','wifi_config',{qos:2});
@@ -135,7 +195,7 @@ import mqtt from 'mqtt';
 
     componentWillUnmount(){
       console.log("disconnecting...");
-      this.mqtt_client.end();
+      //this.mqtt_client.end();
     }
 
     backToHome = () => {
@@ -168,37 +228,44 @@ import mqtt from 'mqtt';
           {/* End hero unit */}
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <List component="nav" aria-label="main mailbox folders">
-                {/* <ListItem button>
-                  <ListItemIcon>
-                    <InboxIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Inbox" />
-                </ListItem>
-                <ListItem button>
-                  <ListItemIcon>
-                    <DraftsIcon />
-                  </ListItemIcon> 
-                  <ListItemText primary="Drafts" />
-                </ListItem> */}
-                {this.state.ssid_list.map(wifi => (
-                  <ListItem key={wifi.id} onClick={() => this.openPassword(wifi.name)}>
-                    <ListItemText primary={wifi.name.substr(0,20)} />
-                    <WifiStrengthIcon strength={wifi.strength} />
+              <h3>接続モード</h3>
+              <WirelessSwitchRadioButtons />
+              {/*<FormControl component="fieldset"></FormControl>*/}
+      
+              {/* <List component="nav">
+                  <ListItem button selected="True">
+                    <ListItemText primary="APモード" />
                   </ListItem>
-                )
-                )}
-                {this.state.ssid_list.length < 1 && <ListItem key="0">
-                  <ListItemText primary="読込中" />
-                  <CircularProgress  />
-                </ListItem>}
-              </List>
-              <Divider />
-              <List component="nav" aria-label="secondary mailbox folders">
-                <ListItem button>
-                  <ListItemText primary="その他" />
-                </ListItem>
-              </List>
+                  <ListItem button>
+                    <ListItemText primary="Wifiモード" secondary="接続中：POMIQ241"/>
+                  </ListItem>
+              </List> */}
+              {/* <h3>Wifi接続状態</h3>
+                <ListItem >
+                  <CheckCircle />
+                  <ListItemText primary="POMIQ241" />
+                  <WifiStrengthIcon strength={78} />
+                </ListItem> */}
+                <h3>接続可能なWifiリスト</h3>
+                <List component="nav">
+                  {this.state.ssid_list.map(wifi => (
+                    <ListItem key={wifi.id} onClick={() => this.openPassword(wifi.name)}>
+                      <ListItemText primary={wifi.name.substr(0,20)} />
+                      <WifiStrengthIcon strength={wifi.strength} />
+                    </ListItem>
+                  )
+                  )}
+                  {this.state.ssid_list.length < 1 && <ListItem key="0">
+                    <ListItemText primary="読込中" />
+                    <CircularProgress  />
+                  </ListItem>}
+                </List>
+                <Divider />
+                <List component="nav" aria-label="secondary mailbox folders">
+                  <ListItem button>
+                    <ListItemText primary="その他" />
+                  </ListItem>
+                </List>
             </Grid>
           </Grid>
           <hr />
@@ -212,5 +279,5 @@ import mqtt from 'mqtt';
       );
     }
   }
-
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
   export default withRouter(WifiConfig);

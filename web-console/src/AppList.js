@@ -49,7 +49,9 @@ import { withRouter } from 'react-router';
               flexGrow: 1,
             },
           }));
-        var cards = [{id:"wifi" ,name: "wifi設定",url: "./wifi",description:"接続先wifiを設定します。"}];//, 
+        var cards = [{id:"wifi" ,name: "wifi設定",url: "./wifi",description:"接続先wifiを設定します。"},
+        {id:"irstudy" ,name: "リモコン学習",url: "./irstudy",description:"リモコンの信号を学習します"},
+        {id:"irsend" ,name: "リモコン操作",url: "./irsend",description:"リモコンの信号を送信して操作します"}];//, 
             //{id:"ir_receiver" ,name: "リモコンコピー",url: "./ir_receiver",description:"リモコンの信号を保存します"}];
             //,{id:"dummy",name: "dummy",url:"./dummy",description:"nurupo"}];
 
