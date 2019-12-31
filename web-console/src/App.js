@@ -1,8 +1,7 @@
 import React from 'react';
 import AppList from './AppList';
 import WifiConfig from './WifiConfig';
-import IRStudy from './IRStudy';
-import IRSend from './IRSend';
+import IrControl from './IrControl';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 //Appbar components
@@ -12,6 +11,7 @@ import AntennaIcon from '@material-ui/icons/SettingsInputAntenna';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
+import Container from '@material-ui/core/Container';
 
 
 export default class App extends React.Component{
@@ -28,12 +28,13 @@ export default class App extends React.Component{
                 <AntennaIcon />
               </Toolbar>
           </AppBar>
-          <main>
-          <Route exact path='/' component={AppList} />
-          <Route exact path='/wifi' component={WifiConfig} />
-          <Route exact path='/irstudy' component={IRStudy} />
-          <Route exact path='/irsend' component={IRSend} />
-          </main>
+          <Container maxWidth="md">
+                <main>
+                 <Route exact path='/' component={AppList} />
+                 <Route exact path='/wifi' component={WifiConfig} />
+                 <Route exact path='/ircontrol' component={IrControl} />
+                </main>
+          </Container>
         </BrowserRouter>
       );
   }

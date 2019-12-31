@@ -8,7 +8,7 @@ import { withRouter } from 'react-router';
 import mqtt from 'mqtt';
 import BackToHomeBtn from "./BackToHomeBtn";
 
-class IRSend extends React.Component {
+class IrControl extends React.Component {
   backToHome = () =>{
     this.props.history.push("/")
   }
@@ -17,16 +17,7 @@ class IRSend extends React.Component {
     return (
       <div>
         <h2>リモコン</h2>
-        <RadioGroup name="network-mode-selector" value={this.state.switch_value}>
-          <ListItem button>
-              <FormControlLabel value="record" control={<Radio />}/>
-              <ListItemText primary="リモコン登録"/>
-            </ListItem>
-            <ListItem button>
-              <FormControlLabel value="send" control={<Radio/>}/>
-            <ListItemText primary="リモコン送信"/>
-          </ListItem>
-        </RadioGroup>
+
         <hr />
         <BackToHomeBtn onClick={this.backToHome} />
       </div>
@@ -34,4 +25,4 @@ class IRSend extends React.Component {
   }
 }
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-export default withRouter(IRSend);
+export default withRouter(IrControl);
