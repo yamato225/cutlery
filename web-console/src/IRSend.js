@@ -1,37 +1,15 @@
-import React, { useState } from 'react'
-
-import {RadioGroup,FormControlLabel,Radio} from '@material-ui/core';
-import {ListItem,ListItemText} from '@material-ui/core';
-
-import { withRouter } from 'react-router';
+import React from 'react'
 
 import mqtt from 'mqtt';
-import BackToHomeBtn from "./BackToHomeBtn";
 
-class IRSend extends React.Component {
-  backToHome = () =>{
-    this.props.history.push("/")
-  }
+export default class IrLearn extends React.Component {
 
   render() {
     return (
       <div>
-        <h2>リモコン</h2>
-        <RadioGroup name="network-mode-selector" value={this.state.switch_value}>
-          <ListItem button>
-              <FormControlLabel value="record" control={<Radio />}/>
-              <ListItemText primary="リモコン登録"/>
-            </ListItem>
-            <ListItem button>
-              <FormControlLabel value="send" control={<Radio/>}/>
-            <ListItemText primary="リモコン送信"/>
-          </ListItem>
-        </RadioGroup>
-        <hr />
-        <BackToHomeBtn onClick={this.backToHome} />
+        <h2>信号送信</h2>
+        いいいい
       </div>
     );
   }
 }
-　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
-export default withRouter(IRSend);
