@@ -42,7 +42,7 @@ class IrControl extends React.Component {
             <Tab label="シグナル登録" />
             <Tab label="シグナル送信" />
           </Tabs>
-          </Paper>
+        </Paper>
           {this.state.remote_mode === 0 ? 
           <IrLearn /> : <IrSend />}
         <hr />
