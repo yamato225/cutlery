@@ -4,7 +4,7 @@ import mqtt from 'mqtt';
 import { withStyles } from '@material-ui/core/styles';
 import { TextField, Typography, Grid} from '@material-ui/core';
 import CreatableSelect from 'react-select/creatable';
-import { Paper ,Button } from '@material-ui/core';
+import { Paper ,Button,Card,CardHeader,CardContent } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -81,8 +81,8 @@ export default class IrLearn extends React.Component {
     return (
       <div>
         <p></p>
-        <ExpansionPanel square >
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        {/* <ExpansionPanel square >
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} expanded={true}>
             <Typography>登録するリモコンの情報を設定</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -114,7 +114,7 @@ export default class IrLearn extends React.Component {
           </ExpansionPanelDetails>
         </ExpansionPanel>
         <ExpansionPanel square>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} >
+          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} expanded={true}>
             <Typography variant="subtitle1">シグナル読み取り</Typography>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails>
@@ -128,19 +128,74 @@ export default class IrLearn extends React.Component {
               </Grid>
             </Grid>
           </ExpansionPanelDetails>
-        </ExpansionPanel>
-        <Paper>
-          <Typography variant="caption">登録するリモコンを選ぶか、新しいリモコンの名前を入れてください。</Typography>
-          <CreatableSelect
-            isClearable
-            onChange={this.handleChange}
-            onInputChange={this.handleInputChange}
-            options={options}
-            placeholder="機器"
-            formatCreateLabel={(inputValue) => `新しい機器を登録: ${inputValue}`}
-            required
-          />
-        </Paper>
+        </ExpansionPanel> */}
+
+        <Card variant="outlined" square>
+          <CardContent>
+            <Typography variant="h6" component="h6" >リモコンの情報を設定</Typography>
+                <Typography variant="caption" color="textSecondary">登録するリモコンを選ぶか、新しいリモコンの名前を入れてください。</Typography>
+                <CreatableSelect
+                isClearable
+                onChange={this.handleChange}
+                onInputChange={this.handleInputChange}
+                options={options}
+                placeholder="機器"
+                formatCreateLabel={(inputValue) => `新しい機器を登録: ${inputValue}`}
+                required
+                />
+                <Typography variant="caption" color="textSecondary">登録するリモコンのボタンを選ぶか、新しいボタンの名前を入れてください。</Typography>
+                <CreatableSelect
+                isClearable
+                onChange={this.handleChange}
+                onInputChange={this.handleInputChange}
+                options={options}
+                placeholder="ボタン"
+                formatCreateLabel={(inputValue) => `新しいボタンを登録: ${inputValue}`}
+                />
+          </CardContent>
+        </Card>
+        <Card variant="outlined" square>
+          <CardContent>
+          <Typography variant="h6">シグナル登録</Typography>
+                <Typography variant="caption" color="textSecondary">センサーに向けて登録したいリモコンのボタンを押してください。</Typography>
+                <p></p>
+                <TextField multiline rows="4" label="センサーの状態" fullWidth variant="outlined" value="シグナル受信待ちです・・・" disabled/>
+                <Button variant="contained" color="primary">保存する</Button>
+                <Button variant="outlined" color="default">もう一度読み取る</Button>
+          </CardContent>
+        </Card>
+
+
+        {/* <Paper elevation={3}>
+          <Grid container>
+            <Grid item>
+              <Typography variant="h5">登録するリモコンの情報を設定</Typography>
+            </Grid>
+                <Grid item>
+                <Typography variant="caption">登録するリモコンを選ぶか、新しいリモコンの名前を入れてください。</Typography>
+                <CreatableSelect
+                isClearable
+                onChange={this.handleChange}
+                onInputChange={this.handleInputChange}
+                options={options}
+                placeholder="機器"
+                formatCreateLabel={(inputValue) => `新しい機器を登録: ${inputValue}`}
+                required
+                />
+                </Grid>
+                <Grid item>
+                  <Typography variant="caption">登録するリモコンのボタンを選ぶか、新しいボタンの名前を入れてください。</Typography>
+                  <CreatableSelect
+                  isClearable
+                  onChange={this.handleChange}
+                  onInputChange={this.handleInputChange}
+                  options={options}
+                  placeholder="ボタン"
+                  formatCreateLabel={(inputValue) => `新しいボタンを登録: ${inputValue}`}
+                  />
+              </Grid>
+            </Grid>
+        </Paper> */}
       </div>
     );
   }
