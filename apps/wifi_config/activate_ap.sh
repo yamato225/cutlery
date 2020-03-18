@@ -4,7 +4,8 @@ sudo systemctl stop wpa_supplicant
 sudo systemctl stop dhcpcd
 
 # give fixed ip
-sudo ip addr add 172.24.1.1
+sudo ip addr flush dev wlan0
+sudo ip addr add 172.24.1.1 dev wlan0
 sudo ip route add default via 172.24.1.1
 
 # start dhcp server

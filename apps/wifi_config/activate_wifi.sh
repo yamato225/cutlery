@@ -1,8 +1,12 @@
 #!/bin/bash
 
+set -o nounset
+
 # activate wifi connection
 
-declare -r TARGET_IP=8.8.8.8
+mydir=$(cd $(dirname $0); pwd)
+
+declare -ri MAX_TIME=10
 
 sudo systemctl stop hostapd
 sudo systemctl stop dnsmasq
@@ -13,14 +17,21 @@ sudo systemctl restart dhcpcd
 # check connection
 declare -i count=0
 declare -i status=1
-for((count=0;count<$MAX_TIME;count++))
+declare target_ip=""
+for((count=0;$count<$MAX_TIME;count++))
 do
-    ping -c 1 ${TARGET_IP} > /dev/null 2>&1
+    target_ip=$(ip route show | awk '{if($1=="default")print $3}')
+    ping -c 1 ${target_ip} > /dev/null 2>&1
     if [[ $? -eq 0 ]];then
         # success: connecting to Internet
         status=0
         break
     fi
 done
+
+# when failed, activate ap
+if [[ ${status} -ne 0 ]];then
+    bash ${mydir}/activate_ap.sh
+fi
 
 exit ${status}
