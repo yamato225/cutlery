@@ -1,6 +1,12 @@
+# keep_connection.py
+# activated by root
+
 import json
 import subprocess
 
+import threading
+
+# 設定ファイル読み取り用クラス
 class config_admin:
     def __init__(self):
         fw=open("config.json","r")
@@ -12,9 +18,6 @@ class config_admin:
     def save(self):
         fw=open("config.json","w")
         json.dump(cfg,fw,indent=4)
-
-
-
 
 def check_mode():
     json_text=subprocess.Popen("ip --json address show wlan0",
@@ -30,10 +33,14 @@ def check_mode():
                 if address["family"]=="inet":
                     my_ip=address["local"]
     if my_ip != "":
-
-        print(my_ip)
+        
     else:
         print("cannot get ip")
+
+class ConfigMonitor(threading.Thread):
+    def __init__(self):
+        super(ConfigMonitor, seld).__init__()
+
 
 
 check_mode()
