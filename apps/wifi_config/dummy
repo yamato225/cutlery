@@ -1,0 +1,7 @@
+country=JP
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+network={
+	ssid="aaa"
+	psk=fd99265a45aaa77dbcc3bbf140d9b261f4067e607a5be6794e43f3089b839c7e
+}
