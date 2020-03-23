@@ -88,6 +88,9 @@ class MonitorConnection(threading.Thread):
 
     def activate_ap(self):
         NetworkControl.activate_ap()
+    
+    def get_mode(self):
+        return ConfigAdmin.get("wifi_mode")
 
     def run(self):
         print("start monitoring connection")
@@ -137,15 +140,26 @@ class KeepConnection(object):
 
     def start_mqtt(self):
         client = mqtt.Client()
-        client.message_callback_add("wifi_config/mode",self.on_wifi_mode)
+        client.message_callback_add("wifi_config/connection/change/mode",self.on_wifi_mode)
+        client.message_callback_add("wifi_config/connection/request/status",self.on_request_status)
         client.connect("localhost", 1883, 60)
         client.subscribe("wifi_config/#")
+        #client.publish("wifi_",)
         client.loop_forever()
 
-    def on_wifi_mode(self,clt,obj,msg):
-        print("got message"+msg.payload.decode('utf-8'))
+    def on_wifi_mode(self,client,obj,msg):
+        print("got change"+msg.payload.decode('utf-8'))
         mode=str(msg.payload.decode('utf-8'))
         self.monitor.change_mode(mode)
+        self.publish_status(client)
+
+    def publish_status(self,client):
+        mode=self.monitor.get_mode()
+        client.publish("wifi_config/connection/status",mode)
+
+    def on_request_status(self,client,obj,msg):
+        print("got request")
+        self.publish_status(client)
 
 if __name__ == "__main__":
     KeepConnection()
