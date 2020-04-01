@@ -18,6 +18,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import mqtt from 'mqtt';
 
+
   function ShowReconnectMessage(props){
     const {target_ssid,open} = props;
 
@@ -94,14 +95,15 @@ import mqtt from 'mqtt';
   function getUrl(){
     var host_name=window.location.host.split(':')[0];
     var url="ws://"+host_name+":9090";
-    //console.log(url);
+    url="ws://dishbase01.local:9090";
+    console.log(url);
     //url="ws://dishdev02.local:9090";
     url="ws://192.168.3.147:9090";
     //this.mqtt_client = mqtt.connect(url);
     return url;
   }
 
-
+  //WifiListコンポーネント
   class WifiList extends React.Component{
     constructor(props){
       super(props);
@@ -147,7 +149,7 @@ import mqtt from 'mqtt';
     connect_mqtt_server(){
       var url=getUrl();
       //console.log(url);
-      url="ws://dishdev02.local:9090";
+      url="ws://dishbase01.local:9090";
       this.mqtt_client = mqtt.connect(url);
       //#this.wireless_switch=mqtt.connect(url);
 
@@ -208,18 +210,56 @@ import mqtt from 'mqtt';
       };
       this.mqtt_connect=null;
       this.mqtt_client=null;
+
+      this.ap_mode_status_text='';
+      this.wifi_mode_status_text="";
+    }
+
+    connect_mqtt_server(){
+      var url=getUrl();
+      url="ws://dishbase01.local:9090";
+      this.mqtt_client=mqtt.connect(url);
+      this.mqtt_client.on('connect',function(){
+        console.log("connected.");
+      });
+
+      this.mqtt_client.subscribe('wifi_config/connection/status');
+      this.mqtt_client.on("message",(topic,message) => {
+        var obj=JSON.parse(message.toString());
+        var mode=obj.connection_mode;
+        switch (mode) {
+          case "wifi":
+            this.activate_wifi_mode(obj);
+            break;
+          case "ap":
+            this.activate_ap_mode(obj);
+          default:
+            break;
+        }
+        console.log(obj);
+      });
+    }
+
+    activate_ap_mode = (obj) => {
+      this.setState({wifi_mode_status_text:""});
+      this.setState({ap_mode_status_text:"\""+obj.ap_ssid+"\"として接続可能です。"});
+      this.changeSwitchValue("ap");
+    }
+
+    activate_wifi_mode = (obj) => {
+      this.setState({wifi_mode_status_text:"\""+obj.wifi_ssid+"\"に接続中です。"});
+      this.setState({ap_mode_status_text:""});
+      this.changeSwitchValue("wifi");
     }
 
     componentWillMount(){
       //connect to MQTT
-      //alert(localtion.host);
-      //var host_name=window.location.host.split(':')[0];
-      //var url="ws://"+host_name+":9090";
+      this.connect_mqtt_server();
     }
 
     componentWillUnmount(){
-      //console.log("disconnecting...");
-      //this.mqtt_client.end();
+      console.log("disconnecting...");
+      this.mqtt_client.end();
     }
 
     backToHome = () => {
@@ -239,11 +279,11 @@ import mqtt from 'mqtt';
               <RadioGroup name="network-mode-selector" value={this.state.switch_value}>
                   <ListItem button onClick={() => this.changeSwitchValue("ap")}>
                     <FormControlLabel value="ap" control={<Radio />}/>
-                    <ListItemText primary="APモード" secondary='"dish0010"として接続出来ます' />
+                    <ListItemText primary="APモード" secondary={this.state.ap_mode_status_text} />
                   </ListItem>
                   <ListItem button onClick={() => this.changeSwitchValue("wifi")}>
                     <FormControlLabel value="wifi" control={<Radio/>}/>
-                    <ListItemText primary="Wifiモード" secondary="接続中：POMIQ24"/>
+                    <ListItemText primary="Wifiモード" secondary={this.state.wifi_mode_status_text}/>
                   </ListItem>
               </RadioGroup>
               {this.state.switch_value==="wifi" ? <WifiList /> : ''}
