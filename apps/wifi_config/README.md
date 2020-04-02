@@ -27,3 +27,16 @@ APモードを有効化する。
 wifiモードを有効化する。
 
 
+# MQTTトピック
+
+### wifi_config/connection/status
+
+ap/wifiのモードを通知する。
+
+### wifi_config/connection/request/status
+
+status通知を依頼する。
+
+### wifi_config/connection/change/mode
+
+ap/wifiのモードを変更する。

@@ -9,32 +9,7 @@ from time import sleep
 import os
 import threading
 
-class ConfigAdmin:
-    __conf_file_path=""
-    __myconfig=""
-
-    @classmethod
-    def load(cls):
-        cls.__conf_file_path=cls.get_current_path()+"/config.json"
-        fw=open(cls.__conf_file_path,"r")
-        cls.myconfig=json.load(fw)
-
-    @classmethod
-    def get(cls,key):
-        return cls.myconfig[key]
-
-    @classmethod
-    def get_current_path(cls):
-        return os.path.dirname(os.path.abspath(__file__))
-
-    @classmethod
-    def set(cls,key,value):
-        cls.myconfig[key]=value
-
-    @classmethod
-    def save(cls):
-        fw=open(cls.__conf_file_path,"w")
-        json.dump(cls.__myconfig,fw,indent=4)
+from config_admin import ConfigAdmin
 
 class NetworkControl:
     @staticmethod
@@ -77,7 +52,7 @@ class MonitorConnection(threading.Thread):
         self.__stop_event.set()
 
     def change_mode(self,mode):
-        ConfigAdmin.set("wifi_mode",mode)
+        ConfigAdmin.set("connection_mode",mode)
         if mode=="wifi":
             self.activate_wifi()
         else:
@@ -90,21 +65,21 @@ class MonitorConnection(threading.Thread):
         NetworkControl.activate_ap()
     
     def get_mode(self):
-        return ConfigAdmin.get("wifi_mode")
+        return ConfigAdmin.get("connection_mode")
 
     def run(self):
         print("start monitoring connection")
         self.is_running=True
         wifi_retry_num=0
         while self.__stop_event.is_set() == False:
-            wifi_mode=ConfigAdmin.get("wifi_mode")
+            wifi_mode=ConfigAdmin.get("connection_mode")
             #print(NetworkControl.ping_check(ConfigAdmin.get("const")["WIFI_CHECK_IP"]))
             if wifi_mode=="wifi":
                 if not NetworkControl.ping_check(ConfigAdmin.get("const")["WIFI_CHECK_IP"]):
                     print("failed to ping:"+ConfigAdmin.get("const")["WIFI_CHECK_IP"])
                     # 設定が有効になっているか確認.(有効でなければapモードに変更)
                     if not NetworkControl.check_wifi_config():
-                        ConfigAdmin.set("wifi_mode","ap")
+                        ConfigAdmin.set("connection_mode","ap")
                         continue
                     
                     # activate_wifi再実行
@@ -118,7 +93,7 @@ class MonitorConnection(threading.Thread):
                         # 複数回ネットワーク接続に失敗した場合APモードに切り替え。
                         wifi_retry_num=0
                         print("activate_wifi="+wifi_mode)
-                        ConfigAdmin.set("wifi_mode","ap")
+                        ConfigAdmin.set("connection_mode","ap")
             elif wifi_mode=="ap":
                 if not NetworkControl.check_is_ap_active():
                     print("activate_ap="+wifi_mode)
@@ -155,7 +130,10 @@ class KeepConnection(object):
 
     def publish_status(self,client):
         mode=self.monitor.get_mode()
-        client.publish("wifi_config/connection/status",mode)
+        obj={"connection_mode":mode,
+        "wifi_ssid":ConfigAdmin.get("wifi_info")["ssid"],
+        "ap_ssid":ConfigAdmin.get("ap_info")["ssid"]}
+        client.publish("wifi_config/connection/status",json.dumps(obj))
 
     def on_request_status(self,client,obj,msg):
         print("got request")
@@ -172,7 +150,7 @@ monitor=MonitorConnection()
 def on_wifi_mode(clt,obj,msg):
     global monitor
     mode=str(msg.payload.decode('utf-8'))
-    #ConfigAdmin.set("wifi_mode",mode)
+    #ConfigAdmin.set("connection_mode",mode)
     monitor.change_mode(mode)
 
 

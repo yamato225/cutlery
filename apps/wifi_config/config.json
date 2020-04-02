@@ -1,9 +1,17 @@
 {
     "const":{
         "AP_LOCAL_IP":"172.24.1.1",
-        "WIFI_CHECK_IP":"172.20.10.1",
+        "WIFI_CHECK_IP":"8.8.8.8",
         "WIFI_CONFIG_FILE_PATH":"/etc/wpa_supplicant/wpa_supplicant.conf",
         "WIFI_RETRY_MAX":10
     },
-    "wifi_mode": "wifi"
+    "connection_mode": "wifi",
+    "wifi_info":{
+        "ssid":"POMIQ241",
+        "password":"xxxxxxxxxxx"
+    },
+    "ap_info":{
+        "ssid":"dishbase01",
+        "password":"bunbunbun"
+    }
 }
