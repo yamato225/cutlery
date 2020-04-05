@@ -18,7 +18,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import mqtt from 'mqtt';
 
-
   function ShowReconnectMessage(props){
     const {target_ssid,open} = props;
 
@@ -28,7 +27,7 @@ import mqtt from 'mqtt';
       <ul>
         <li>dishとの接続を切断します。</li>
         <li>スマートフォンを{target_ssid}に接続してください。</li>
-        <li>３０秒後に自動的にcutleryを再読み込みします。</li>
+        <li>接続後にこの画面を再読込してください。</li>
       </ul>
     </Dialog>
     );
@@ -108,7 +107,8 @@ import mqtt from 'mqtt';
     constructor(props){
       super(props);
       this.state = {
-        ssid_list:[{id:"test",name:"test",strength:70}],
+        //ssid_list:[{id:"test",name:"test",strength:70}],
+        ssid_list:[],
         passwordDialogOpen:false,
         reconnectDialogOpen:false,
         passwordText:"",
@@ -154,7 +154,7 @@ import mqtt from 'mqtt';
       //#this.wireless_switch=mqtt.connect(url);
 
       this.mqtt_client.on('connect',function(){
-        console.log("connected.");
+        console.log("connected to list.");
       })
 
       //this.mqtt_client.subscribe('wireless_switch/get_status',{qos:2});
@@ -162,6 +162,10 @@ import mqtt from 'mqtt';
       this.mqtt_client.subscribe('wifi_config/scan_results',{qos:0});
       this.mqtt_client.publish('process_waker/wake','wifi_config',{qos:2});
       this.mqtt_client.on("message",this.refresh_ssid_list);
+    }
+
+    componentWillMount(){
+      this.connect_mqtt_server()
     }
 
     render(){
