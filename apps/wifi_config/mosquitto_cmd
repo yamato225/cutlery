@@ -1,0 +1,3 @@
+mosquitto_pub -h dishbase01.local -p 1883 -t wifi_config/connection/status -m '{"connection_mode":"wifi","wifi_ssid":"POMIQ2412"}' -q 0 -d
+
+mosquitto_pub -h dishbase01.local -p 1883 -t wifi_config/connection/status -m '{"connection_mode":"ap","ap_ssid":"disb"}' -q 0 -d
