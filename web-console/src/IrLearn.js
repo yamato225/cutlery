@@ -51,19 +51,35 @@ const ExpansionPanelDetails = withStyles(theme => ({
   },
 }))(MuiExpansionPanelDetails);
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
+function get_IR_device_list(){
+  var host_name=window.location.host.split(':')[0];
+  var url="http://"+host_name+":5000/device";
 
-const top100Films = [
-  { title: 'The Shawshank Redemption', year: 1994 },
-  { title: 'The Godfather', year: 1972 },
-  { title: 'The Godfather: Part II', year: 1974 },
-  { title: 'The Dark Knight', year: 2008 }];
+}
 
 export default class IrLearn extends React.Component {
+
+  componentWillMount = () => {
+    this.setState({devices: [
+      { value: '1', label: '1' },
+      { value: '2', label: '2' },
+      { value: '3', label: '3' }
+    ]});
+
+    this.setState({buttons: [
+      { value: '1', label: 'いち' },
+      { value: '2', label: 'に' },
+      { value: '3', label: 'さん' }
+    ]});
+
+    fetch('/api/devices').then(response => {
+      console.log(response.status); // 200
+      return response.json();
+  }).then(json => {
+      console.log('json:', json); // json : { name : 'Yohei' }
+  });
+  
+  }
 
   render() {
     return (
@@ -79,7 +95,7 @@ export default class IrLearn extends React.Component {
                 isClearable
                 onChange={this.handleChange}
                 onInputChange={this.handleInputChange}
-                options={options}
+                options={this.state.devices}
                 placeholder="機器"
                 formatCreateLabel={(inputValue) => `新しい機器を登録: ${inputValue}`}
                 required
@@ -89,7 +105,7 @@ export default class IrLearn extends React.Component {
                 isClearable
                 onChange={this.handleChange}
                 onInputChange={this.handleInputChange}
-                options={options}
+                options={this.state.buttons}
                 placeholder="ボタン"
                 formatCreateLabel={(inputValue) => `新しいボタンを登録: ${inputValue}`}
                 />

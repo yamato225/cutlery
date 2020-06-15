@@ -1,5 +1,5 @@
 {
-  "name": "webtest",
+  "name": "cutlery-console",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "http-proxy-middleware": "^1.0.4",
     "mqtt": "^3.0.0",
     "n": "^6.5.1",
     "react": "^16.13.1",
