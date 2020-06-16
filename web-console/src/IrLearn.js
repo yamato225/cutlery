@@ -59,26 +59,47 @@ function get_IR_device_list(){
 
 export default class IrLearn extends React.Component {
 
+  devices_list=null;
+
   componentWillMount = () => {
-    this.setState({devices: [
-      { value: '1', label: '1' },
-      { value: '2', label: '2' },
-      { value: '3', label: '3' }
-    ]});
+    this.setState({devices:[]});
+    this.setState({buttons:[]});
+    this.get_devices_list();
+  }
 
-    this.setState({buttons: [
-      { value: '1', label: 'いち' },
-      { value: '2', label: 'に' },
-      { value: '3', label: 'さん' }
-    ]});
-
+  get_devices_list = () =>{
     fetch('/api/devices').then(response => {
       console.log(response.status); // 200
       return response.json();
-  }).then(json => {
-      console.log('json:', json); // json : { name : 'Yohei' }
-  });
-  
+    }).then(json => {
+      this.devices_list=json["devices"];
+    }).finally(() =>{
+      var devices=[];
+      this.devices_list.forEach(d=> {
+        devices.push({"value":d["id"], "label": d["label"]});
+      });
+      this.setState({devices: devices});
+    });
+  }
+
+  update_buttons_selector = (selected) =>{
+    var buttons=[];
+    console.log(selected);
+    if(selected){
+      //nullでない
+      if(!("__isNew__" in selected)){
+        var device=this.devices_list.find(dev=>{
+          return dev["id"]===selected["value"];
+        });
+        device["buttons"].forEach(btn=>{
+          buttons.push({"value":btn["id"],"label":btn["label"]});
+        });
+      }else{
+        //生成時
+        console.log("detect:isNew");
+      }
+    }
+    this.setState({buttons: buttons});
   }
 
   render() {
@@ -93,8 +114,7 @@ export default class IrLearn extends React.Component {
                 <Typography variant="caption" color="textSecondary">登録するリモコンを選ぶか、新しいリモコンの名前を入れてください。</Typography>
                 <CreatableSelect
                 isClearable
-                onChange={this.handleChange}
-                onInputChange={this.handleInputChange}
+                onChange={this.update_buttons_selector}
                 options={this.state.devices}
                 placeholder="機器"
                 formatCreateLabel={(inputValue) => `新しい機器を登録: ${inputValue}`}
