@@ -2,12 +2,11 @@ import React from 'react'
 
 import { withRouter } from 'react-router';
 
-import mqtt from 'mqtt';
 import BackToHomeBtn from "./BackToHomeBtn";
 
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Paper from '@material-ui/core/Paper';
+import {Paper,Select} from '@material-ui/core';
 
 import IrLearn from './IrLearn';
 import IrSend from './IrSend';
@@ -26,6 +25,26 @@ class IrControl extends React.Component {
 
   handleChange = (event,newValue) =>{
     this.setState({remote_mode:newValue});
+    // this.setState({devices: [
+    //   {"value":1, "label":"poipoi"},
+    //   {"value":2, "label":"njo"}
+    // ]})
+    this.get_devices_list();
+  }
+
+  componentWillMount = () => {
+    this.get_devices_list();
+  }
+
+  devices_list=[];
+  get_devices_list = () =>{
+    fetch('/api/devices').then(response => {
+      console.log(response.status); // 200
+      return response.json();
+    }).then(json => {
+      this.setState({devices_data: json["devices"]});
+      //this.devices_list=json["devices"];
+    });
   }
 
   render() {
@@ -44,7 +63,7 @@ class IrControl extends React.Component {
           </Tabs>
         </Paper>
           {this.state.remote_mode === 0 ? 
-          <IrLearn /> : <IrSend />}
+          <IrLearn devices_data={this.state.devices_data} /> : <IrSend devices_data={this.state.devices_data}/>}
         <hr />
         <BackToHomeBtn onClick={this.backToHome} />
       </div>

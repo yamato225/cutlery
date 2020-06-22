@@ -3,17 +3,37 @@ import React from 'react'
 import mqtt from 'mqtt';
 import {Grid,Card,CardContent,Typography, Select, MenuItem, FormControl, InputLabel, Button, Box} from '@material-ui/core';
 
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' },
-];
-
-
 
 export default class IrLearn extends React.Component {
 
+  componentWillMount = () => {
+    this.setState({devices:[]});
+    this.setState({buttons:[]});
+  }
+
+  update_buttons_selector = (event) =>{
+    var buttons=[];
+    console.log(event);
+    if(event.target.value){
+      //nullでない
+        var device=this.props.devices_data.find(dev=>{
+          return dev["id"]===event.target.value;
+        });
+        device["buttons"].forEach(btn=>{
+          buttons.push({"value":btn["id"],"label":btn["label"]});
+        });
+    }
+    this.setState({buttons: buttons});
+  }
+
   render() {
+    var devices=[];
+    if(this.props.devices_data){
+      this.props.devices_data.forEach(d=> {
+        devices.push({"value":d["id"], "label": d["label"]});
+      });
+    }
+
     return (
       <div>
         <Grid container spacing={2}>
@@ -27,10 +47,11 @@ export default class IrLearn extends React.Component {
                           <InputLabel>機器</InputLabel>
                           <Select
                             label="機器"
+                            onChange={this.update_buttons_selector}
                           >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            {devices.map(dev=>(
+                              <MenuItem value={dev.value}>{dev.label}</MenuItem>
+                            ))}
                           </Select>
                         </FormControl>
                       <Box m={2}/>
@@ -41,9 +62,9 @@ export default class IrLearn extends React.Component {
                           <Select
                             label="ボタン"
                           >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            {this.state.buttons.map(btn=>(
+                              <MenuItem value={btn.value}>{btn.label}</MenuItem>
+                            ))}
                           </Select>
                         </FormControl>
                   </CardContent>
