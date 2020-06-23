@@ -94,10 +94,10 @@ import mqtt from 'mqtt';
   function getUrl(){
     var host_name=window.location.host.split(':')[0];
     var url="ws://"+host_name+":9090";
-    url="ws://dishbase01.local:9090";
+    //url="ws://dishbase01.local:9090";
     console.log(url);
     //url="ws://dishdev02.local:9090";
-    url="ws://192.168.3.147:9090";
+    //url="ws://192.168.3.147:9090";
     //this.mqtt_client = mqtt.connect(url);
     return url;
   }

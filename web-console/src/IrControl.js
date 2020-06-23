@@ -8,15 +8,51 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import {Paper,Select} from '@material-ui/core';
 
+import mqtt from 'mqtt';
+
 import IrLearn from './IrLearn';
 import IrSend from './IrSend';
+
+function getUrl(){
+  var host_name=window.location.host.split(':')[0];
+  var url="ws://"+host_name+":9090";
+  //url="ws://dishbase01.local:9090";
+  //console.log(url);
+  //url="ws://dishdev02.local:9090";
+  //url="ws://192.168.3.147:9090";
+  //this.mqtt_client = mqtt.connect(url);
+  return url;
+}
 
 class IrControl extends React.Component {
   constructor(props){
     super(props);
     this.state = {
       remote_mode: 0, //set "learn" as default
+      device_list:[]
     };
+  }
+
+  update_device_list = (topic,message) => {
+    console.log(message.toString());
+    if(topic=="ir_devices/devices"){
+      var obj=JSON.parse(message.toString());
+      this.setState({devices_data: obj["devices"]});
+    }
+  }
+
+  connect_mqtt_server(){
+    var url=getUrl();
+    console.log(url);
+    this.mqtt_client = mqtt.connect(url);
+
+    this.mqtt_client.on('connect',function(){
+      console.log("connected to list.");
+    })
+
+    this.mqtt_client.subscribe('ir_devices/devices');
+    this.mqtt_client.publish('ir_devices/request/devices','get');
+    this.mqtt_client.on("message",this.update_device_list);
   }
 
   backToHome = () =>{
@@ -33,19 +69,10 @@ class IrControl extends React.Component {
   }
 
   componentWillMount = () => {
-    this.get_devices_list();
+    //this.get_devices_list();
+    this.connect_mqtt_server();
   }
 
-  devices_list=[];
-  get_devices_list = () =>{
-    fetch('/api/devices').then(response => {
-      console.log(response.status); // 200
-      return response.json();
-    }).then(json => {
-      this.setState({devices_data: json["devices"]});
-      //this.devices_list=json["devices"];
-    });
-  }
 
   render() {
     return (
