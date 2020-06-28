@@ -1,72 +1,43 @@
-import React,{Component} from 'react'
+import React from 'react'
 
 import mqtt from 'mqtt';
-import { withStyles } from '@material-ui/core/styles';
 import { TextField, Typography, Grid} from '@material-ui/core';
 import CreatableSelect from 'react-select/creatable';
-import { Paper ,Button,Card,CardHeader,CardContent } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
-import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import { Button,Card,CardContent } from '@material-ui/core';
 
-const ExpansionPanel = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
-  },
-  expanded: {},
-})(MuiExpansionPanel);
-
-const ExpansionPanelSummary = withStyles({
-  root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
-  },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiExpansionPanelSummary);
-
-const ExpansionPanelDetails = withStyles(theme => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiExpansionPanelDetails);
-
-function get_IR_device_list(){
+function getUrl(){
   var host_name=window.location.host.split(':')[0];
-  var url="http://"+host_name+":5000/device";
-
+  var url="ws://"+host_name+":9090";
+  return url;
 }
 
 export default class IrLearn extends React.Component {
   devices_list=null;
 
   constructor(props){
-    super(props)
+    super(props);
+    this.state = {
+      devices:[],
+      buttons:[],
+      recv_signal:"シグナル受信待ちです..."
+    };
+  }
+
+  subscribe_ir_codes=()=>{
+    this.mqtt_signal=mqtt.connect(getUrl());
+    this.mqtt_signal.on('connect',()=>{
+      console.log("connected");
+    });
+    this.mqtt_signal.subscribe('ir_control/recv_signal');
+    this.mqtt_signal.on('message',this.on_receive_signal);
+  }
+
+  on_receive_signal = (topic,message) => {
+    this.setState({recv_signal:message.toString()})
   }
 
   componentWillMount = () => {
-    this.setState({devices:[]});
-    this.setState({buttons:[]});
+    this.subscribe_ir_codes();
   }
 
   update_buttons_selector = (selected) =>{
@@ -87,6 +58,10 @@ export default class IrLearn extends React.Component {
       }
     }
     this.setState({buttons: buttons});
+  }
+
+  on_save_button=()=>{
+    console.log("cliecked");
   }
 
   render() {
@@ -132,12 +107,12 @@ export default class IrLearn extends React.Component {
           <Typography variant="h6">シグナル登録</Typography>
                 <Typography variant="caption" color="textSecondary">センサーに向けて登録したいリモコンのボタンを押してください。</Typography>
                 <p></p>
-                <TextField multiline rows="4" label="センサーの状態" fullWidth variant="outlined" value="シグナル受信待ちです・・・" disabled/>
+                <TextField multiline rows="4" label="センサーの状態" fullWidth variant="outlined" value={this.state.recv_signal} disabled/>
           </CardContent>
         </Card>
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary">保存する</Button>
+          <Button variant="contained" color="primary" onClick={this.on_save_button}>保存する</Button>
           <Button variant="outlined" color="default">もう一度読み取る</Button>
         </Grid>
         </Grid>
