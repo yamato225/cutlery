@@ -52,16 +52,32 @@ export default class IrLearn extends React.Component {
         device["buttons"].forEach(btn=>{
           buttons.push({"value":btn["id"],"label":btn["label"]});
         });
+        this.target_device={"id":selected["value"],"label":selected["label"]};
       }else{
         //生成時
         console.log("detect:isNew");
+        this.target_device={"id":0,"label":selected["label"]};
       }
     }
     this.setState({buttons: buttons});
   }
 
+  recv_added_button_name=(selected)=>{
+    if(selected){
+      //nullでない
+      if("__isNew__" in selected){
+        this.target_button={"id":0,"label":selected["label"]};
+      }else{
+        this.target_button={"id":selected['value'],"label":selected["label"]};
+      }
+    }
+  }
+
   on_save_button=()=>{
-    console.log("cliecked");
+    var new_dev={"device":this.target_device, "button":this.target_button };
+    console.log(new_dev);
+
+    this.mqtt_signal.publish('ir_devices/add/device',JSON.stringify(new_dev));
   }
 
   render() {
@@ -92,8 +108,7 @@ export default class IrLearn extends React.Component {
                 <Typography variant="caption" color="textSecondary">登録するリモコンのボタンを選ぶか、新しいボタンの名前を入れてください。</Typography>
                 <CreatableSelect
                 isClearable
-                onChange={this.handleChange}
-                onInputChange={this.handleInputChange}
+                onChange={this.recv_added_button_name}
                 options={this.state.buttons}
                 placeholder="ボタン"
                 formatCreateLabel={(inputValue) => `新しいボタンを登録: ${inputValue}`}
