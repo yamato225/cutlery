@@ -10,7 +10,6 @@
     "@testing-library/user-event": "^7.1.2",
     "http-proxy-middleware": "^1.0.4",
     "mqtt": "^3.0.0",
-    "n": "^6.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
